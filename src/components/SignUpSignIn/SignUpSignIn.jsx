@@ -1,6 +1,10 @@
+// src/components/SignUpSignIn.js
 import React, { useState } from 'react';
-import axios from 'axios'; // This will be used for API requests
-import { useHistory } from 'react-router-dom'; // To handle navigation
+import { auth, db } from '../../config/firebase'; // Firebase imports
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'; // Firebase Auth functions
+import { doc, setDoc, getDoc } from 'firebase/firestore'; // Firestore functions
+import './SignUpSignIn.css';
 
 const SignUpSignIn = () => {
   const [formData, setFormData] = useState({
@@ -11,9 +15,9 @@ const SignUpSignIn = () => {
     location: '',
     role: 'user' // Default role is 'user'
   });
-  
-  const [isSignUp, setIsSignUp] = useState(true); // Toggle between sign up and sign in
-  const history = useHistory();
+
+  const [isSignUp, setIsSignUp] = useState(true); // Toggle between sign-up and sign-in
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -28,26 +32,43 @@ const SignUpSignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // Adjust API endpoint based on sign-up or sign-in
-      const endpoint = isSignUp ? 'http://localhost:5000/api/auth/signup' : 'http://localhost:5000/api/auth/signin';
-      const response = await axios.post(endpoint, formData);
+    const { name, email, password, farmName, location, role } = formData;
 
-      // Store token or handle user redirection based on the role
-      const userRole = response.data.role; // Assuming the role is sent back in the response
-      localStorage.setItem('token', response.data.token); // Save token to local storage
-      alert(`${isSignUp ? 'Sign-up' : 'Sign-in'} successful! Redirecting to ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Dashboard.`);
-      
-      // Redirect based on user role
-      if (userRole === 'farmer') {
-        history.push('/farmer-dashboard'); // Redirect to Farmer Dashboard
-      } else if (userRole === 'admin') {
-        history.push('/admin-dashboard'); // Redirect to Admin Dashboard
+    try {
+      if (isSignUp) {
+        // Firebase Sign-Up
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // Store additional info in Firestore
+        await setDoc(doc(db, 'users', userCredential.user.uid), {
+          name,
+          farmName: role === 'farmer' ? farmName : null,
+          location: role === 'farmer' ? location : null,
+          role,
+        });
+
+        alert('Sign-up successful!');
       } else {
-        history.push('/user-dashboard'); // Redirect to User Dashboard
+        // Firebase Sign-In
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        
+        // Fetch user data from Firestore
+        const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+        const userData = userDoc.data();
+        alert('Sign-in successful!');
       }
+
+      // Redirect based on role
+      if (role === 'farmer') {
+        navigate('/farmer-dashboard');
+      } else if (role === 'admin') {
+        navigate('/admin-dashboard');
+      } else {
+        navigate('/user-dashboard');
+      }
+
     } catch (error) {
-      alert(`Error during ${isSignUp ? 'sign-up' : 'sign-in'}. Try again.`);
+      alert(`Error during ${isSignUp ? 'sign-up' : 'sign-in'}: ${error.message}`);
     }
   };
 
@@ -65,22 +86,26 @@ const SignUpSignIn = () => {
               onChange={handleChange}
               required
             />
-            <input
-              type="text"
-              name="farmName"
-              placeholder="Farm Name"
-              value={formData.farmName}
-              onChange={handleChange}
-              required={formData.role === 'farmer'}
-            />
-            <input
-              type="text"
-              name="location"
-              placeholder="Farm Location"
-              value={formData.location}
-              onChange={handleChange}
-              required={formData.role === 'farmer'}
-            />
+            {formData.role === 'farmer' && (
+              <>
+                <input
+                  type="text"
+                  name="farmName"
+                  placeholder="Farm Name"
+                  value={formData.farmName}
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Farm Location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
+              </>
+            )}
           </>
         )}
         <input
