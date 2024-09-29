@@ -5,9 +5,9 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import SignUpSignIn from './components/SignUpSignIn/SignUpSignIn'
+import FarmerDashboard from './pages/FarmerDashboard/FarmerDashboard';
 
 
-const FarmerDashboard = () => <h1>Farmer Dashboard</h1>;
 const UserDashboard = () => <h1>User Dashboard</h1>;
 const AdminDashboard = () => <h1>Admin Dashboard</h1>;
 

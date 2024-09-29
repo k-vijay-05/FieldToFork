@@ -1,18 +1,15 @@
-// src/components/SignUpSignIn.js
 import React, { useState } from 'react';
 import { auth, db } from '../../config/firebase'; // Firebase imports
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'; // Firebase Auth functions
 import { doc, setDoc, getDoc } from 'firebase/firestore'; // Firestore functions
-import './SignUpSignIn.css';
+import './SignUpSignIn.css'; // Import the updated CSS file
 
 const SignUpSignIn = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    farmName: '',
-    location: '',
     role: 'user' // Default role is 'user'
   });
 
@@ -32,7 +29,7 @@ const SignUpSignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password, farmName, location, role } = formData;
+    const { name, email, password, role } = formData;
 
     try {
       if (isSignUp) {
@@ -42,8 +39,7 @@ const SignUpSignIn = () => {
         // Store additional info in Firestore
         await setDoc(doc(db, 'users', userCredential.user.uid), {
           name,
-          farmName: role === 'farmer' ? farmName : null,
-          location: role === 'farmer' ? location : null,
+          email,
           role,
         });
 
@@ -51,7 +47,7 @@ const SignUpSignIn = () => {
       } else {
         // Firebase Sign-In
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        
+
         // Fetch user data from Firestore
         const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
         const userData = userDoc.data();
@@ -73,94 +69,77 @@ const SignUpSignIn = () => {
   };
 
   return (
-    <div>
-      <h2>{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
-      <form onSubmit={handleSubmit}>
-        {isSignUp && (
-          <>
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-            {formData.role === 'farmer' && (
-              <>
-                <input
-                  type="text"
-                  name="farmName"
-                  placeholder="Farm Name"
-                  value={formData.farmName}
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="location"
-                  placeholder="Farm Location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  required
-                />
-              </>
-            )}
-          </>
-        )}
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        
-        <div>
-          <label>
-            <input
-              type="radio"
-              value="farmer"
-              checked={formData.role === 'farmer'}
-              onChange={handleRoleChange}
-            />
-            Farmer
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="user"
-              checked={formData.role === 'user'}
-              onChange={handleRoleChange}
-            />
-            User
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="admin"
-              checked={formData.role === 'admin'}
-              onChange={handleRoleChange}
-            />
-            Admin
-          </label>
-        </div>
+    <div className="container">
+      <div className="form-container">
+        <h2>{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
+        <form onSubmit={handleSubmit}>
+          {isSignUp && (
+            <>
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              
+            </>
+          )}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
 
-        <button type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
-      </form>
-      
-      <button onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'Switch to Sign In' : 'Switch to Sign Up'}
-      </button>
+          <div className="radio-group">
+            <label>
+              <input
+                type="radio"
+                value="farmer"
+                checked={formData.role === 'farmer'}
+                onChange={handleRoleChange}
+              />
+              Farmer
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="user"
+                checked={formData.role === 'user'}
+                onChange={handleRoleChange}
+              />
+              User
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="admin"
+                checked={formData.role === 'admin'}
+                onChange={handleRoleChange}
+              />
+              Admin
+            </label>
+          </div>
+
+          <button type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
+        </form>
+
+        <button className="switch-btn" onClick={() => setIsSignUp(!isSignUp)}>
+          {isSignUp ? 'Switch to Sign In' : 'Switch to Sign Up'}
+        </button>
+      </div>
     </div>
   );
 };
