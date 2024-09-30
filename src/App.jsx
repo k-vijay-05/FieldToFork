@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import SignUpSignIn from './components/SignUpSignIn/SignUpSignIn'
 import FarmerDashboard from './pages/FarmerDashboard/FarmerDashboard';
+import AddProduct from './components/Farmer/AddProduct/AddProduct';
 
 
 const UserDashboard = () => <h1>User Dashboard</h1>;
@@ -29,6 +30,11 @@ function App() {
       path:"/admin-dashboard" ,
       element:<AdminDashboard />,
     },
+    {
+      path:"/add",
+      element:<AddProduct/>,
+
+    }
   
   ]);
 
