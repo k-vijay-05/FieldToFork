@@ -3,14 +3,17 @@ import { db, storage } from '../../../config/firebase'; // Firebase Firestore an
 import { addDoc, collection } from 'firebase/firestore'; // Firestore functions
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'; // Firebase Storage functions
 import './AddProduct.css'; // Add styles here or create a new CSS file
-
+import { useContext } from 'react';
+import {Context} from '../../../context/AuthContext'
 const AddProduct = () => {
+  const { user } = useContext(Context);
   const [productData, setProductData] = useState({
     name: '',
     price: '',
     description: '',
     quantity: '',
-    imageUrl: '', // Store the uploaded image URL
+    imageUrl: '',
+    email:user.email
   });
 
   const [imageFile, setImageFile] = useState(null); // Store the image file

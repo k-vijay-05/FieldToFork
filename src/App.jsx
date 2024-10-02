@@ -7,35 +7,38 @@ import { AuthContext } from './context/AuthContext';
 import SignUpSignIn from './components/SignUpSignIn/SignUpSignIn'
 import FarmerDashboard from './pages/FarmerDashboard/FarmerDashboard';
 import AddProduct from './components/Farmer/AddProduct/AddProduct';
-
+import ManageProduct from './components/Farmer/ManageProduct/ManageProduct';
 
 const UserDashboard = () => <h1>User Dashboard</h1>;
 const AdminDashboard = () => <h1>Admin Dashboard</h1>;
 
 function App() {
   const router = createBrowserRouter([
-   {
-    path:"/",
-    element:<SignUpSignIn/>,
-   },
     {
-      path:"/farmer-dashboard" ,
-      element:<FarmerDashboard />,
+      path: "/",
+      element: <SignUpSignIn />,
     },
     {
-      path:"/user-dashboard" ,
-      element:<UserDashboard />,
+      path: "/farmer-dashboard",
+      element: <FarmerDashboard />,
     },
     {
-      path:"/admin-dashboard" ,
-      element:<AdminDashboard />,
+      path: "/user-dashboard",
+      element: <UserDashboard />,
     },
     {
-      path:"/add",
-      element:<AddProduct/>,
-
+      path: "/admin-dashboard",
+      element: <AdminDashboard />,
+    },
+    {
+      path: "/add",
+      element: <AddProduct />,
+    },
+    {
+      path: "/manage",
+      element: <ManageProduct />,
     }
-  
+
   ]);
 
   return (
