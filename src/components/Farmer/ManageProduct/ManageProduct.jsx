@@ -1,13 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../../../config/firebase'; // Firestore and Firebase Auth
-import { collection, query, where, getDocs } from 'firebase/firestore'; // Firestore functions
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore'; // Firestore functions
 import { onAuthStateChanged } from 'firebase/auth'; // Firebase auth
 import './ManageProduct.css'; // Add styles for the card layout
+import { useNavigate } from 'react-router-dom';
 
 const ManageProduct = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userEmail, setUserEmail] = useState(null);
+    const navigate = useNavigate();
+
+    // Handle Edit navigation
+    const handleEdit = (productId) => {
+        navigate(`/edit-product/${productId}`);
+    };
+
+    // Handle Delete product
+    const handleDelete = async (productId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+        if (confirmDelete) {
+            try {
+                await deleteDoc(doc(db, 'products', productId));
+                setProducts((prevProducts) => prevProducts.filter(product => product.id !== productId));
+                alert('Product deleted successfully');
+            } catch (error) {
+                console.error('Error deleting product: ', error);
+                alert('Failed to delete the product');
+            }
+        }
+    };
 
     // Fetch authenticated user and products based on their email
     useEffect(() => {
@@ -57,16 +79,22 @@ const ManageProduct = () => {
                 <div className="products-grid">
                     {products.map((product) => (
                         <div className="product-card" key={product.id}>
-                            <img
-                                src={product.imageUrl}
-                                alt={product.name}
-                                className="product-image"
-                            />
+                            <div className="card-header">
+                                <img
+                                    src={product.imageUrl}
+                                    alt={product.name}
+                                    className="product-image"
+                                />
+                            </div>
                             <div className="product-info">
                                 <h3>{product.name}</h3>
-                                <p><strong>Price:</strong> {product.price}</p>
-                                <p><strong>Description:</strong> {product.description}</p>
-                                <p><strong>Quantity:</strong> {product.quantity}</p>
+                                <p className="product-price">{product.price}</p>
+                                <p className="product-description">{product.description}</p>
+                                <p className="product-quantity">Quantity: {product.quantity}</p>
+                            </div>
+                            <div className="card-actions">
+                                <button className="edit-btn" onClick={() => handleEdit(product.id)}>Edit</button>
+                                <button className="delete-btn" onClick={() => handleDelete(product.id)}>Delete</button>
                             </div>
                         </div>
                     ))}

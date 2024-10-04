@@ -8,6 +8,7 @@ import SignUpSignIn from './components/SignUpSignIn/SignUpSignIn'
 import FarmerDashboard from './pages/FarmerDashboard/FarmerDashboard';
 import AddProduct from './components/Farmer/AddProduct/AddProduct';
 import ManageProduct from './components/Farmer/ManageProduct/ManageProduct';
+import EditProduct from './components/Farmer/EditProduct/EditProduct';
 
 const UserDashboard = () => <h1>User Dashboard</h1>;
 const AdminDashboard = () => <h1>Admin Dashboard</h1>;
@@ -37,6 +38,9 @@ function App() {
     {
       path: "/manage",
       element: <ManageProduct />,
+    },{
+      path:"/edit-product/:id",
+      element:<EditProduct />,
     }
 
   ]);

@@ -1,48 +1,103 @@
+/* ManageProduct.css */
 .manage-products-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     padding: 20px;
 }
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     width: 100%;
+    max-width: 1200px;
 }
 
 .product-card {
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
+}
+
+.card-header {
+    position: relative;
+    padding-top: 56.25%;
+    /* 16:9 aspect ratio */
 }
 
 .product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 200px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 8px 8px 0 0;
 }
 
 .product-info {
-    padding: 15px;
+    padding: 16px;
+    text-align: center;
 }
 
 .product-info h3 {
-    margin: 10px 0;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 0;
+    color: #333;
 }
 
-.product-info p {
-    margin: 5px 0;
-    font-size: 16px;
+.product-price {
+    font-size: 1.2rem;
+    color: #27ae60;
+    margin: 8px 0;
+}
+
+.product-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.product-quantity {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background-color: #f7f7f7;
+}
+
+.card-actions button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.edit-btn:hover {
+    background-color: #2980b9;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
 }
