@@ -1,0 +1,87 @@
+
+
+/* UserDashboard.css */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 15px 0;
+}
+
+.sidebar li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Profile.css */
+.profile-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.profile-info label {
+    display: block;
+    margin: 10px 0;
+}
+
+.profile-info input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* OrderHistory.css */
+.order-history-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.order-history-container li {
+    background-color: #f8f8f8;
+    padding: 20px;
+    margin: 10px 0;
+}
+
+/* Favorites.css */
+.favorites-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.favorites-container li {
+    background-color: #f8f8f8;
+    padding: 20px;
+    margin: 10px 0;
+}
+
+/* Settings.css */
+.settings-section {
+    margin-bottom: 30px;
+}
