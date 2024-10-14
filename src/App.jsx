@@ -16,7 +16,7 @@ const AdminDashboard = () => <h1>Admin Dashboard</h1>;
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "/signup",
       element: <SignUpSignIn />,
     },
     {
@@ -42,7 +42,7 @@ function App() {
       path:"/edit-product/:id",
       element:<EditProduct />,
     },{
-      path:"/user-dashboard",
+      path:"/",
       element:<UserDashboard/>,
     }
 

@@ -1,34 +1,57 @@
-// src/components/UserDashboard/UserDashboard.js
-import React from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
-// import Profile from './Profile';
-// import OrderHistory from './OrderHistory';
-// import Favorites from './Favorites';
-// import Settings from './Settings';
-import './UserDashboard.css'; // Add styles for layout
+import React, { useEffect, useState } from 'react';
+import { db } from '../../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import './UserDashboard.css';
 
 const UserDashboard = () => {
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const productsRef = collection(db, 'products');
+                const productsSnapshot = await getDocs(productsRef);
+                const productsList = productsSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                setProducts(productsList);
+            } catch (error) {
+                console.error('Error fetching products: ', error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
     return (
-        <div className="dashboard-container">
-            {/* Sidebar for navigation */}
-            <div className="sidebar">
-                <ul>
-                    <li><Link to="/user/profile">Profile</Link></li>
-                    <li><Link to="/user/orders">Order History</Link></li>
-                    <li><Link to="/user/favorites">Favorites</Link></li>
-                    <li><Link to="/user/settings">Settings</Link></li>
+        <div className="dashboard">
+            <nav className="navbar">
+                <div className="navbar-brand">FarmConnect</div>
+                <ul className="navbar-menu">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/logout">Logout</a></li>
                 </ul>
-            </div>
-            
-            {/* Main content area */}
-            <div className="main-content">
-                {/* <Routes> */}
-                    {/* <Route path="/profile" element={<Profile />} />
-                    <Route path="/orders" element={<OrderHistory />} />
-                    <Route path="/favorites" element={<Favorites />} />
-                    <Route path="/settings" element={<Settings />} />
-                </Routes> */}
-            </div>
+            </nav>
+
+            <section className="products-section">
+                <h1 className="section-title">Farmers' Products</h1>
+                <div className="products-container">
+                    {products.map((product) => (
+                        <div className="product-card" key={product.id}>
+                            <img src={product.imageUrl} alt={product.name} className="product-image1" />
+                            <div className="product-info">
+                                <h3 className="product-name">{product.name}</h3>
+                                <p className="product-description">{product.description}</p>
+                                <p className="product-price">Price: ${product.price}</p>
+                                <p className="product-quantity">Available: {product.quantity}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     );
 };
